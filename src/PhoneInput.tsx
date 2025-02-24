@@ -72,12 +72,28 @@ const PhoneInput = forwardRef(
 			initialDialCode?.dialCode ?? ""
 		);
 		const [countryPickerVisible, setCountryPickerVisible] = useState(false);
+		const [formatter, setFormatter] = useState(
+			() =>
+				new (require("google-libphonenumber").AsYouTypeFormatter)(
+					initialCountry
+				)
+		);
 
 		useEffect(() => {
 			if (value && value.length) {
 				handleChangeText(value);
 			}
 		}, [value]);
+
+		useEffect(() => {
+			if (dialCode) {
+				setFormatter(
+					new (require("google-libphonenumber").AsYouTypeFormatter)(
+						dialCode.countryCode
+					)
+				);
+			}
+		}, [dialCode]);
 
 		const isValidNumber = (number: string, country: string): boolean => {
 			const obj = phoneUtil.parse(number, country);
@@ -94,7 +110,15 @@ const PhoneInput = forwardRef(
 				}
 			}
 			setDialCode(dc); // update flag icon
-			setPhoneNumber(input);
+
+			// Format the phone number
+			let formattedNumber = "";
+			formatter.clear();
+			for (let i = 0; i < input.length; i++) {
+				formattedNumber = formatter.inputDigit(input[i]);
+			}
+			setPhoneNumber(formattedNumber);
+
 			const number = dc
 				? dc.dialCode + input.split(dc.dialCode).join("")
 				: input;

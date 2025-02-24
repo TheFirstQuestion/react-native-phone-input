@@ -68,7 +68,7 @@ Returns an object containing information about the Phone number every time the i
 * `input`: raw phone number input. Same as `onChangePhoneNumber`.
 * `isValid`: `boolean` indicating if input is a valid phone number.
 
----
+
 
 #### `onChangePhoneNumber`
 
@@ -103,3 +103,27 @@ Customize the phone number input.
 #### `textStyle`
 
 Customize text inside the phone number input.
+
+---
+
+#### `autoFocus`
+
+Boolean indicating if the input should be focused when the component is mounted. Defaults to `false`.
+
+---
+
+#### `testID`
+
+Used to locate the phone number input for testing purposes.
+
+---
+
+#### `onFocus`
+
+Called when the input is focused.
+
+---
+
+#### `onBlur`
+
+Called when the input is blurred, i.e. when the input loses focus.
