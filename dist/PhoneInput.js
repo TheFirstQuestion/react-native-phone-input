@@ -32,19 +32,25 @@ const CountryFlag_1 = __importDefault(require("./CountryFlag"));
 const CountryPicker_1 = __importDefault(require("./CountryPicker"));
 const dialCodes_1 = __importDefault(require("./assets/dialCodes"));
 const utils_1 = require("./utils");
-const PNF = require('google-libphonenumber').PhoneNumberFormat;
-const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-const PhoneInput = (0, react_1.forwardRef)(({ initialCountry = 'US', value, style = {}, textStyle = {}, dismissKeyboard = true, autoFocus = false, onChange = () => { }, onChangePhoneNumber = () => { }, onFocus, onBlur }, ref) => {
+const PNF = require("google-libphonenumber").PhoneNumberFormat;
+const phoneUtil = require("google-libphonenumber").PhoneNumberUtil.getInstance();
+const PhoneInput = (0, react_1.forwardRef)(({ initialCountry = "US", value, style = {}, textStyle = {}, dismissKeyboard = true, autoFocus = false, testID, onChange = () => { }, onChangePhoneNumber = () => { }, onFocus, onBlur, textInputProps, }, ref) => {
     var _a;
-    const initialDialCode = (0, react_1.useMemo)(() => dialCodes_1.default.find(dc => initialCountry && dc.countryCode === initialCountry.toUpperCase()), []);
+    const initialDialCode = (0, react_1.useMemo)(() => dialCodes_1.default.find((dc) => initialCountry && dc.countryCode === initialCountry.toUpperCase()), []);
     const [dialCode, setDialCode] = (0, react_1.useState)(initialDialCode);
-    const [phoneNumber, setPhoneNumber] = (0, react_1.useState)((_a = initialDialCode === null || initialDialCode === void 0 ? void 0 : initialDialCode.dialCode) !== null && _a !== void 0 ? _a : '');
+    const [phoneNumber, setPhoneNumber] = (0, react_1.useState)((_a = initialDialCode === null || initialDialCode === void 0 ? void 0 : initialDialCode.dialCode) !== null && _a !== void 0 ? _a : "");
     const [countryPickerVisible, setCountryPickerVisible] = (0, react_1.useState)(false);
+    const [formatter, setFormatter] = (0, react_1.useState)(() => new (require("google-libphonenumber").AsYouTypeFormatter)(initialCountry));
     (0, react_1.useEffect)(() => {
         if (value && value.length) {
             handleChangeText(value);
         }
     }, [value]);
+    (0, react_1.useEffect)(() => {
+        if (dialCode) {
+            setFormatter(new (require("google-libphonenumber").AsYouTypeFormatter)(dialCode.countryCode));
+        }
+    }, [dialCode]);
     const isValidNumber = (number, country) => {
         const obj = phoneUtil.parse(number, country);
         return phoneUtil.isValidNumber(obj);
@@ -52,15 +58,23 @@ const PhoneInput = (0, react_1.forwardRef)(({ initialCountry = 'US', value, styl
     const handleChangeText = (input) => {
         input = (0, utils_1.normalize)(input);
         let dc = (0, utils_1.findDialCode)(input);
-        if (!dc && !input.startsWith('+') && !input.startsWith('00')) {
+        if (!dc && !input.startsWith("+") && !input.startsWith("00")) {
             dc = initialDialCode;
             if (dc && input.length >= 2) {
-                input = dc.dialCode + input.replace(/^0+/, '');
+                input = dc.dialCode + input.replace(/^0+/, "");
             }
         }
         setDialCode(dc); // update flag icon
-        setPhoneNumber(input);
-        const number = dc ? dc.dialCode + input.split(dc.dialCode).join('') : input;
+        // Format the phone number
+        let formattedNumber = "";
+        formatter.clear();
+        for (let i = 0; i < input.length; i++) {
+            formattedNumber = formatter.inputDigit(input[i]);
+        }
+        setPhoneNumber(formattedNumber);
+        const number = dc
+            ? dc.dialCode + input.split(dc.dialCode).join("")
+            : input;
         if (onChangePhoneNumber)
             onChangePhoneNumber(number);
         emitChange(number, dc);
@@ -72,7 +86,7 @@ const PhoneInput = (0, react_1.forwardRef)(({ initialCountry = 'US', value, styl
                 dialCode: null,
                 countryCode: null,
                 isValid: false,
-                e164: null
+                e164: null,
             };
             if (dialCode) {
                 event.dialCode = dialCode.dialCode;
@@ -83,7 +97,9 @@ const PhoneInput = (0, react_1.forwardRef)(({ initialCountry = 'US', value, styl
                 }
                 catch (_a) { }
                 if (obj) {
-                    event.isValid = obj ? isValidNumber(number, dialCode.countryCode) : false;
+                    event.isValid = obj
+                        ? isValidNumber(number, dialCode.countryCode)
+                        : false;
                     event.e164 = event.isValid ? phoneUtil.format(obj, PNF.E164) : null;
                 }
             }
@@ -99,24 +115,30 @@ const PhoneInput = (0, react_1.forwardRef)(({ initialCountry = 'US', value, styl
     const handleSelect = (newDialCode) => {
         let number = phoneNumber;
         if (dialCode)
-            number = number.split(dialCode.dialCode).join('');
+            number = number.split(dialCode.dialCode).join("");
         setDialCode(newDialCode);
         handleChangeText(newDialCode.dialCode + number);
         setCountryPickerVisible(false);
     };
     return (react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement(react_native_1.View, { ref: ref, style: [{
-                    borderColor: '#eeeeee',
-                    flexDirection: 'row'
-                }, style] },
-            react_1.default.createElement(react_native_1.TouchableOpacity, { style: { flexDirection: 'row' }, onPress: openCountryPicker },
+        react_1.default.createElement(react_native_1.View, { ref: ref, style: [
+                {
+                    borderColor: "#eeeeee",
+                    flexDirection: "row",
+                },
+                style,
+            ] },
+            react_1.default.createElement(react_native_1.TouchableOpacity, { style: { flexDirection: "row" }, onPress: openCountryPicker },
                 react_1.default.createElement(CountryFlag_1.default, { dialCode: dialCode })),
-            react_1.default.createElement(react_native_1.TextInput, { dataDetectorTypes: ['phoneNumber'], keyboardType: 'phone-pad', onChangeText: handleChangeText, autoFocus: autoFocus, value: phoneNumber, onFocus: onFocus, onBlur: onBlur, style: [{
+            react_1.default.createElement(react_native_1.TextInput, Object.assign({ testID: testID, dataDetectorTypes: ["phoneNumber"], keyboardType: "phone-pad", autoComplete: "tel", onChangeText: handleChangeText, autoFocus: autoFocus, value: phoneNumber, onFocus: onFocus, onBlur: onBlur, style: [
+                    {
                         borderWidth: 0,
                         flexGrow: 1,
                         height: 40,
-                        paddingLeft: 0
-                    }, textStyle] })),
+                        paddingLeft: 0,
+                    },
+                    textStyle,
+                ] }, textInputProps))),
         react_1.default.createElement(CountryPicker_1.default, { visible: countryPickerVisible, onSelect: handleSelect, onRequestClose: () => setCountryPickerVisible(false) })));
 });
 exports.default = PhoneInput;

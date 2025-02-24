@@ -2,7 +2,7 @@
 
 International phone number input for React Native with country picker supporting 235 countries. Uses [ruimarinho/google-libphonenumber](https://github.com/ruimarinho/google-libphonenumber) to validate input and automatically translates to valid e164 format.
 
-Forked from [@sesamsolutions/phone-input](https://github.com/sesamsolutions/react-native-phone-input). Notable changes:
+This repo is a fork of [@sesamsolutions/phone-input](https://github.com/sesamsolutions/react-native-phone-input). Notable changes:
 
 - Added autofill support for iOS and Android
 - Phone number is formatted as you type
@@ -19,7 +19,7 @@ npm install thefirstquestion/react-native-phone-input
 ## Usage
 
 ```jsx
-import PhoneInput from '@sesamsolutions/phone-input'
+import PhoneInput from "@thefirstquestion/react-native-phone-input";
 ```
 
 ### Example
@@ -27,7 +27,7 @@ import PhoneInput from '@sesamsolutions/phone-input'
 ```jsx
 import React from 'react'
 import { Alert, View } from 'react-native'
-import PhoneInput from '@sesamsolutions/phone-input'
+import import PhoneInput from "@thefirstquestion/react-native-phone-input";
 
 const App = () => {
 
