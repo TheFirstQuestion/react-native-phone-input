@@ -3,9 +3,8 @@ module.exports = {
 		"module:metro-react-native-babel-preset",
 		"@babel/preset-typescript",
 	],
-	env: {
-		test: {
-			plugins: ["@babel/plugin-transform-runtime"],
-		},
-	},
+	plugins: [
+		"@babel/plugin-transform-flow-strip-types",
+		"@babel/plugin-proposal-export-namespace-from",
+	],
 };

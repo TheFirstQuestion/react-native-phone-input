@@ -15,7 +15,7 @@
 	],
 	"scripts": {
 		"build": "npx tsc && cp -r ./src/assets/* ./dist/assets",
-		"test": "jest"
+		"test": "jest --config jest.config.js"
 	},
 	"dependencies": {
 		"google-libphonenumber": "^3.2.33"
@@ -25,16 +25,20 @@
 		"react-native": ">=0.59"
 	},
 	"devDependencies": {
+		"@babel/plugin-proposal-export-namespace-from": "^7.18.9",
+		"@babel/plugin-transform-flow-strip-types": "^7.21.0",
 		"@babel/plugin-transform-runtime": "^7.26.9",
 		"@babel/preset-env": "^7.26.9",
 		"@babel/preset-react": "^7.26.3",
 		"@babel/preset-typescript": "^7.26.0",
+		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/jest-native": "^5.4.3",
 		"@testing-library/react-native": "^13.0.1",
 		"@types/jest": "^29.5.14",
 		"@types/node": "^18.11.9",
 		"@types/react": "18.0.25",
 		"@types/react-native": "0.70.6",
+		"babel-jest": "^29.7.0",
 		"jest": "^29.7.0",
 		"jest-environment-jsdom": "^29.7.0",
 		"jest-expect-message": "^1.1.3",
