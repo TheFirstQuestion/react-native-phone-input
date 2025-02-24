@@ -2,16 +2,18 @@
 
 International phone number input for React Native with country picker supporting 235 countries. Uses [ruimarinho/google-libphonenumber](https://github.com/ruimarinho/google-libphonenumber) to validate input and automatically translates to valid e164 format.
 
+Forked from [@sesamsolutions/phone-input](https://github.com/sesamsolutions/react-native-phone-input). Notable changes:
+
+- Added autofill support for iOS and Android
+- Phone number is formatted as you type
+- Added support for `testID` prop for automated testing (e.g. with Jest)
+- Added support for `textInputProps` prop to pass any additional props to the underlying `TextInput` component
+
+
 ## Installation
 
 ```
-yarn add @sesamsolutions/phone-input
-```
-
-or
-
-```
-npm install @sesamsolutions/phone-input
+npm install thefirstquestion/react-native-phone-input
 ```
 
 ## Usage
@@ -127,3 +129,10 @@ Called when the input is focused.
 #### `onBlur`
 
 Called when the input is blurred, i.e. when the input loses focus.
+
+---
+
+#### `textInputProps`
+
+Pass any additional props to the underlying `TextInput` component.
+

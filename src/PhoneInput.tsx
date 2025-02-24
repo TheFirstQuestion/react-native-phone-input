@@ -26,6 +26,7 @@ export interface PhoneInputProps {
 	dismissKeyboard?: boolean;
 	autoFocus?: boolean;
 	testID?: string;
+	textInputProps?: object;
 	onChange?(data: PhoneInputChangeEvent): void;
 	onChangePhoneNumber?(phoneNumber: string): void;
 	onFocus?(event: NativeSyntheticEvent<TextInputFocusEventData>): void;
@@ -54,6 +55,7 @@ const PhoneInput = forwardRef(
 			onChangePhoneNumber = () => {},
 			onFocus,
 			onBlur,
+			textInputProps,
 		}: PhoneInputProps,
 		ref
 	) => {
@@ -205,6 +207,7 @@ const PhoneInput = forwardRef(
 							},
 							textStyle,
 						]}
+						{...textInputProps}
 					/>
 				</View>
 
