@@ -191,8 +191,8 @@ const PhoneInput = forwardRef(
 					<TextInput
 						testID={testID}
 						dataDetectorTypes={["phoneNumber"]}
-						keyboardType={"phone-pad"}
-						autoComplete="tel"
+						keyboardType="phone-pad"
+						textContentType="telephoneNumber"
 						onChangeText={handleChangeText}
 						autoFocus={autoFocus}
 						value={phoneNumber}
