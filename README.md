@@ -138,3 +138,5 @@ Pass any additional props to the underlying `TextInput` component.
 ## This Repo
 
 Run `npm run example` to start the example app.
+
+This library was bootstrapped using [`create-react-native-library`](https://callstack.github.io/react-native-builder-bob/create).
