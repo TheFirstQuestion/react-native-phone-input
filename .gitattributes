@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+*.pbxproj -text
+# specific for windows script files
+*.bat text eol=crlf
