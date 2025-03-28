@@ -12,7 +12,7 @@ This repo is a fork of [@sesamsolutions/phone-input](https://github.com/sesamsol
 ## Installation
 
 ```sh
-npm install thefirstquestion/react-native-phone-input
+npm install github:thefirstquestion/react-native-phone-input
 ```
 
 ## Usage
