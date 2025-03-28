@@ -35,6 +35,7 @@ export interface PhoneInputProps {
   autoFocus?: boolean;
   testID?: string;
   textInputProps?: object;
+  disableFlagPicker?: boolean;
   onChange?(data: PhoneInputChangeEvent): void;
   onChangePhoneNumber?(phoneNumber: string): void;
   onFocus?(event: NativeSyntheticEvent<TextInputFocusEventData>): void;
@@ -58,6 +59,7 @@ const PhoneInput = forwardRef<any, PhoneInputProps>((props, ref) => {
     dismissKeyboard = true,
     autoFocus = false,
     testID,
+    disableFlagPicker = false,
     onChange = () => {},
     onChangePhoneNumber = () => {},
     onFocus,
@@ -196,13 +198,15 @@ const PhoneInput = forwardRef<any, PhoneInputProps>((props, ref) => {
         style={[styles.container, style]}
         testID={`${testID}-container`}
       >
-        <TouchableOpacity
-          style={styles.flagContainer}
-          onPress={openCountryPicker}
-          testID={`${testID}-flag-button`}
-        >
-          <CountryFlag dialCode={dialCode} />
-        </TouchableOpacity>
+        {!disableFlagPicker && (
+          <View style={styles.flagContainer}>
+            <CountryFlag dialCode={dialCode} />
+            <TouchableOpacity
+              onPress={openCountryPicker}
+              testID={`${testID}-flag-button`}
+            />
+          </View>
+        )}
 
         <TextInput
           testID={`${testID}-input`}
@@ -219,11 +223,13 @@ const PhoneInput = forwardRef<any, PhoneInputProps>((props, ref) => {
         />
       </View>
 
-      <CountryPicker
-        visible={countryPickerVisible}
-        onSelect={handleSelect}
-        onRequestClose={() => setCountryPickerVisible(false)}
-      />
+      {!disableFlagPicker && (
+        <CountryPicker
+          visible={countryPickerVisible}
+          onSelect={handleSelect}
+          onRequestClose={() => setCountryPickerVisible(false)}
+        />
+      )}
     </>
   );
 });

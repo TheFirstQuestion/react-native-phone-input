@@ -4,7 +4,7 @@ International phone number input for React Native with country picker supporting
 
 This repo is a fork of [@sesamsolutions/phone-input](https://github.com/sesamsolutions/react-native-phone-input). Notable changes:
 
-- Added autofill support for iOS and Android
+- Improved autofill support for iOS and Android
 - Phone number is formatted as you type
 - Added support for `testID` prop for automated testing (e.g. with Jest)
 - Added support for `textInputProps` prop to pass any additional props to the underlying `TextInput` component
@@ -81,12 +81,6 @@ Changes the current input. Be careful not to update this with `onChange`. This w
 
 ---
 
-### ~~`allowCustomDialCode`~~
-
-~~`boolean` indicating whether custom dial code input should be allowed or not. When set to false you can only select dial codes from the country picker. Defaults to `true`.~~
-
----
-
 ### `dismissKeyboard`
 
 Hide the keyboard automatically when the input is considered valid e164 format. Defaults to `true`.
@@ -115,6 +109,8 @@ Boolean indicating if the input should be focused when the component is mounted.
 
 Used to locate the phone number input for testing purposes.
 
+The parent `View` has testID `{testID}-container`, the flag button has testID `{testID}-flag-button`, and the TextInput has testID `{testID}-input`.
+
 ---
 
 ### `onFocus`
@@ -132,6 +128,12 @@ Called when the input is blurred, i.e. when the input loses focus.
 ### `textInputProps`
 
 Pass any additional props to the underlying `TextInput` component.
+
+---
+
+### `disableFlagPicker`
+
+Disables the country code selector and hides the flag icon. Defaults to `false`.
 
 ---
 
