@@ -1,131 +1,4 @@
-<<<<<<< HEAD
-import React, { useState, useEffect, useRef } from 'react'
-import { Animated, Dimensions, FlatList, Modal, Text, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
-import CountryFlag from './CountryFlag'
-import dialCodes, { DialCode } from './assets/dialCodes'
-
-const { width, height } = Dimensions.get('window')
-
-interface CountryPickerProps {
-    children?: any
-    visible: boolean
-    onSelect(dialCode: DialCode): void
-    onRequestClose(): void
-}
-
-const CountryPicker = ({
-    visible = false,
-    onSelect = () => {},
-    onRequestClose = () => {}
-}: CountryPickerProps) => {
-
-    const pickerHeight = useRef(height - 285).current
-    const showAnimation = useRef(new Animated.Value(0)).current
-    const [ _visible, _setVisible ] = useState(visible)
-    const colorScheme = useColorScheme()
-
-    useEffect(() => {
-        if (visible) _setVisible(true)
-        else {
-            Animated.spring(showAnimation, {
-                toValue: visible ? 1 : 0,
-                stiffness: 1000,
-                damping: 500,
-                mass: 1.5,
-                useNativeDriver: true
-            }).start(() => _setVisible(false))
-        }
-    }, [ visible ])
-
-    useEffect(() => {
-        if (_visible) {
-            Animated.spring(showAnimation, {
-                toValue: visible ? 1 : 0,
-                stiffness: 500,
-                damping: 100,
-                mass: 1.5,
-                useNativeDriver: true
-            }).start()
-        }
-    }, [ _visible ])
-
-    const translateY = showAnimation.interpolate({
-        inputRange: [ 0, 1 ],
-        outputRange: [ pickerHeight, 0 ]
-    })
-
-    return (
-        <Modal visible={_visible} transparent>
-            <TouchableWithoutFeedback onPress={onRequestClose}>
-                <View style={{ flex: 1 }}>
-                    <Animated.View style={{
-                        backgroundColor: 'rgba(0, 0, 0, .3)',
-                        height,
-                        opacity: showAnimation,
-                        position: 'absolute',
-                        width
-                    }} />
-                    <TouchableWithoutFeedback onPress={() => {}}>
-                        <Animated.View style={{
-                            backgroundColor: colorScheme === 'light' ? '#ffffff' : '#1c1c1e',
-                            borderTopLeftRadius: 14,
-                            borderTopRightRadius: 14,
-                            bottom: 0,
-                            height: pickerHeight,
-                            overflow: 'hidden',
-                            paddingTop: 10,
-                            position: 'absolute',
-                            transform: [{ translateY }],
-                            width: width
-                        }}>
-                            <FlatList
-                                data={dialCodes}
-                                style={{ paddingTop: 10 }}
-                                contentContainerStyle={{ paddingBottom: 16 }}
-                                keyExtractor={(item) => item.countryCode}
-                                keyboardShouldPersistTaps="always"
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity onPress={() => onSelect(item)}>
-                                        <View style={{
-                                            alignItems: 'center',
-                                            borderColor: colorScheme === 'light' ? '#eff2f5' : '#29292b',
-                                            borderBottomWidth: 1,
-                                            height: 48,
-                                            flexDirection: 'row',
-                                            paddingLeft: 24,
-                                            paddingRight: 24
-                                        }}>
-                                            <CountryFlag dialCode={item} />
-                                            <View style={{ marginLeft: 4 }}>
-                                                <Text style={{
-                                                    color: colorScheme === 'light' ? '#111111' : '#ffffff'
-                                                }}>{item.name}</Text>
-                                            </View>
-                                            <View style={{
-                                                marginLeft: 'auto',
-                                                width: 50
-                                            }}>
-                                                <Text style={{
-                                                    color: '#999999',
-                                                    textAlign: 'right'
-                                                }}>{item.dialCode}</Text>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity>
-                                )}
-                            />
-                        </Animated.View>
-                    </TouchableWithoutFeedback>
-                </View>
-            </TouchableWithoutFeedback>
-        </Modal>
-    )
-
-}
-
-export default CountryPicker
-=======
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Animated,
   Dimensions,
@@ -136,9 +9,10 @@ import {
   TouchableWithoutFeedback,
   useColorScheme,
   View,
+  StyleSheet,
 } from 'react-native';
 import CountryFlag from './CountryFlag';
-import dialCodes, { DialCode } from './assets/dialCodes';
+import dialCodes, { type DialCode } from './assets/dialCodes';
 
 const { width, height } = Dimensions.get('window');
 
@@ -170,7 +44,7 @@ const CountryPicker = ({
         useNativeDriver: true,
       }).start(() => _setVisible(false));
     }
-  }, [visible]);
+  }, [visible, showAnimation, _setVisible]);
 
   useEffect(() => {
     if (_visible) {
@@ -182,7 +56,7 @@ const CountryPicker = ({
         useNativeDriver: true,
       }).start();
     }
-  }, [_visible]);
+  }, [_visible, showAnimation, visible]);
 
   const translateY = showAnimation.interpolate({
     inputRange: [0, 1],
@@ -192,77 +66,60 @@ const CountryPicker = ({
   return (
     <Modal visible={_visible} transparent>
       <TouchableWithoutFeedback onPress={onRequestClose}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
           <Animated.View
-            style={{
-              backgroundColor: 'rgba(0, 0, 0, .3)',
-              height,
-              opacity: showAnimation,
-              position: 'absolute',
-              width,
-            }}
+            style={[
+              styles.overlay,
+              {
+                opacity: showAnimation,
+              },
+            ]}
           />
           <TouchableWithoutFeedback onPress={() => {}}>
             <Animated.View
-              style={{
-                backgroundColor:
-                  colorScheme === 'light' ? '#ffffff' : '#1c1c1e',
-                borderTopLeftRadius: 14,
-                borderTopRightRadius: 14,
-                bottom: 0,
-                height: pickerHeight,
-                overflow: 'hidden',
-                paddingTop: 10,
-                position: 'absolute',
-                transform: [{ translateY }],
-                width: width,
-              }}
+              style={[
+                styles.pickerContainer,
+                {
+                  backgroundColor:
+                    colorScheme === 'light' ? '#ffffff' : '#1c1c1e',
+                  height: pickerHeight,
+                  transform: [{ translateY }],
+                },
+              ]}
             >
               <FlatList
                 data={dialCodes}
-                style={{ paddingTop: 10 }}
-                contentContainerStyle={{ paddingBottom: 16 }}
+                style={styles.flatList}
+                contentContainerStyle={styles.flatListContent}
                 keyExtractor={(item) => item.countryCode}
                 keyboardShouldPersistTaps="always"
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => onSelect(item)}>
                     <View
-                      style={{
-                        alignItems: 'center',
-                        borderColor:
-                          colorScheme === 'light' ? '#eff2f5' : '#29292b',
-                        borderBottomWidth: 1,
-                        height: 48,
-                        flexDirection: 'row',
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                      }}
+                      style={[
+                        styles.itemContainer,
+                        {
+                          borderColor:
+                            colorScheme === 'light' ? '#eff2f5' : '#29292b',
+                        },
+                      ]}
                     >
                       <CountryFlag dialCode={item} />
-                      <View style={{ marginLeft: 4 }}>
+                      <View style={styles.nameContainer}>
                         <Text
-                          style={{
-                            color:
-                              colorScheme === 'light' ? '#111111' : '#ffffff',
-                          }}
+                          style={[
+                            styles.countryName,
+                            {
+                              color:
+                                colorScheme === 'light' ? '#111111' : '#ffffff',
+                            },
+                          ]}
                         >
                           {item.name}
                         </Text>
                       </View>
-                      <View
-                        style={{
-                          marginLeft: 'auto',
-                          width: 50,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: '#999999',
-                            textAlign: 'right',
-                          }}
-                        >
-                          {item.dialCode}
-                        </Text>
+                      <View style={styles.dialCodeContainer}>
+                        <Text style={styles.dialCodeText}>{item.dialCode}</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -276,5 +133,53 @@ const CountryPicker = ({
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, .3)',
+    height,
+    position: 'absolute',
+    width,
+  },
+  pickerContainer: {
+    borderTopLeftRadius: 14,
+    borderTopRightRadius: 14,
+    bottom: 0,
+    overflow: 'hidden',
+    paddingTop: 10,
+    position: 'absolute',
+    width: width,
+  },
+  flatList: {
+    paddingTop: 10,
+  },
+  flatListContent: {
+    paddingBottom: 16,
+  },
+  itemContainer: {
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    height: 48,
+    flexDirection: 'row',
+    paddingLeft: 24,
+    paddingRight: 24,
+  },
+  nameContainer: {
+    marginLeft: 4,
+  },
+  countryName: {
+    // color is dynamically set based on color scheme
+  },
+  dialCodeContainer: {
+    marginLeft: 'auto',
+    width: 50,
+  },
+  dialCodeText: {
+    color: '#999999',
+    textAlign: 'right',
+  },
+});
+
 export default CountryPicker;
->>>>>>> main
